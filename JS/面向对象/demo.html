@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //什么是面向对象：是使用抽象的方式来创建基于现实世界模型的一种编程模式;代码更加简洁，可维护性更高。同时呢更加容易理解
+        //java,c#,php,python...都支持面向对象编程
+        //命名空间、类、对象、属性方法。构造函数、
+        //继承、封装、多态、抽象等特性
+
+
+        //面向对象创建  命名：使用大驼峰命名
+        var Person = function (name, age) {
+            //构造函数初始化
+            //定义一种对象
+            this.name = name;
+            this.age = age;
+            this.SayHelllo = function () {
+                console.log(`我是${this.name},我${this.age}岁`);
+            }
+        }
+        //对象的实例
+        var tangtang = new Person("糖糖", 16);
+        tangtang.SayHelllo();
+
+        //js原型创建对象。原型prototype 相当于一个指针，可以指向一个对象，这个对象可以共享属性和方法
+        var Person1 = function () {
+            this.setName = function (name) {
+                this.name = name;
+            }
+            this.getName = function () {
+                return this.name;
+            }
+        }
+        Person1.prototype = {
+            name: "",
+            age: "",
+            SayHelllo: function () {
+                console.log(`我是${this.name},我${this.age}岁`);
+            }
+        }
+        var tangtang1 = new Person1();
+        tangtang1.name = "糖糖1";
+        tangtang1.age = 18;
+        tangtang1.SayHelllo();
+
+        var tangtang2 = new Person1();
+        tangtang2.setName("糖糖2");
+        console.log(tangtang2.getName());
+        tangtang2.SayHelllo();
+
+        //es6 创建对象
+        class Person2 {
+            constructor(name, age) {
+                this.name = name;
+                this.age = age;
+            }
+            SayHelllo() {
+                console.log(`我是${this.name},我${this.age}岁`);
+            }
+        }
+        var tangtang3 = new Person2("糖糖3", 16);
+        tangtang3.SayHelllo();
+
+        //第四种 json创建面向对象
+        var Person3 = {
+            name: "",
+            age: "",
+            SayHelllo: function () {
+                console.log(`我是${this.name},我${this.age}岁`);
+            }
+        }
+
+        Person3.name = "糖糖4";
+        Person3.age = 22;
+        Person3.SayHelllo();
+
+        //js数据类型也属于对象；js内置对象Strintg/Math/Arry
+        var str = 'str';
+        var num = 1;
+        var n = null;
+        var undef = undefined;
+        var aryy = [1, 2];
+        var obj = {
+            name: "",
+            age: ""
+        }
+        var f = function () {}
+
+        //面向对象+原型+序列化对象 String是Object子类。 总结：一切对象的父类都是Object
+        String.prototype.ToJson = function () {
+            return JSON.parse(this);
+        }
+        Object.prototype.JsonToString = function () {
+            return JSON.stringify(this);
+        }
+        var obj = {
+            name: "阿牛",
+            age: 12
+        }
+        console.log(obj.JsonToString());
+        var str = obj.JsonToString()
+        console.log(str.ToJson());
+
+
+        //序列化问题
+        //var str1 = "{a:1,b:2}"
+        //console.log(str1.ToJson()); //报错
+
+        var str2 = '{"a":1,"b":2}'
+        //第一种
+        console.log(str2.ToJson()); //正确
+
+        //第二种
+        console.log(eval('(' + str2 + ')'))
+
+
+        //属性的删除 主要delte
+
+        delete tangtang.name;
+
+        //属性的检测：见识检查对象是否包含某一个属性
+        //第一种
+        console.log('name' in tangtang)
+        console.log('age' in tangtang)
+
+        //第二种检测
+        console.log(tangtang.hasOwnProperty('name'))
+        console.log(tangtang.hasOwnProperty('age'))
+
+        //属性的遍历
+        for (var k in tangtang) {
+            if (typeof tangtang[k] != 'function')
+                console.log(`我的属性${k},我的值${tangtang[k]}`)
+        }
+
+        //github 上传
+    </script>
+</body>
+
+</html>

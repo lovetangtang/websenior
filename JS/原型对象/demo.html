@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //今日讲解：原型对象/原型链/继承
+        //原型对象：js的一个函数，拥有一个指针属性，prototype.这个指针属性可以指向一个对象.一个外部指针
+        //还有个内部指针，构造函数属性constructor 
+
+        //原型对象 ,共享访问
+        //狗
+        var Dog = function (name) {
+            this.name = name;
+            this.type = "Dog";
+        }
+        Dog.prototype.speak = function () {
+            console.log('汪汪汪');
+        }
+
+        var dog = new Dog('二哈');
+        dog.speak();
+
+        //原型链：通过原型对象指针指向一个实例，可以实现类与类之间的一种继承,Object
+        var Animal = function () {
+            this.AnimalType = "Animal";
+        }
+        Animal.prototype.speak = function () {
+            console.log(this.AnimalType);
+        }
+
+        var Dog = function () {
+            this.name = name;
+            this.type = "Dog";
+        }
+        Dog.prototype = new Animal();
+        var dog2 = new Dog();
+        dog2.speak();
+
+        //原型链继承缺点：会造成引用类型的误修改
+
+        // var Person = function () {
+        //     this.goods = ['手机', '钱包', '汽车'];
+        // }
+
+        // var Xiaoming = function (name) {
+        //     this.name = name
+        // }
+        // Xiaoming.prototype = new Person();
+        // var xiaoming = new Xiaoming();
+        // xiaoming.goods[0] = '手表';
+        // var xiaoming2 = new Xiaoming();
+        // console.log(xiaoming.goods);
+        // console.log(xiaoming2.goods);
+
+        //构造函数继承:call/apply
+        //缺点:会复制父类的所有属性和方法，占用内存过大;当需求改变时，所有继承的子类会跟着相应的变化
+        // var Person = function () {
+        //     this.goods = ['手机', '钱包', '汽车'];
+        //     this.run = function () {
+        //         console.log("跑步");
+        //     }
+        // }
+        // var Xiaoming = function (name) {
+        //     this.name = name
+        //     Person.call(this)
+        // }
+        // var xiaoming = new Xiaoming();
+        // xiaoming.goods[0] = '手表';
+        // var xiaoming2 = new Xiaoming();
+        // console.log(xiaoming.goods);
+        // console.log(xiaoming2.goods);
+
+        //原型加构造函数组合继承
+        var Person = function () {
+            this.goods = ['手机', '钱包', '汽车'];
+        }
+        Person.prototype.run = function () {
+            console.log("跑步");
+        }
+
+        var Xiaoming = function (name) {
+            this.name = name
+            Person.call(this)
+        }
+        Xiaoming.prototype = new Person();
+
+        var xiaoming = new Xiaoming();
+        xiaoming.goods[0] = '手表';
+        var xiaoming2 = new Xiaoming();
+        console.log(xiaoming.goods);
+        console.log(xiaoming2.goods);
+
+        //上传github
+    </script>
+</body>
+
+</html>
