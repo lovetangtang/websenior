@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>js的预解析</title>
+</head>
+
+<body>
+    <script>
+        //js预解析：在当前作用域中，执行代码前浏览器会默认的把var变量和function函数进行提前执行
+        //变量和函数在内存中存在的一种形式
+        //变量有两种数据类型：值类型和引用类型；
+        //值类型存在于内存中的栈里面，存的是一个固定的值，会自动回收。String，Num,null,boolean,undefined
+        //引用类型存在于内存的堆里面，堆里面存的是一个内存地址，它是动态不固定。function/{}/[]/^$//Date/Math。。。
+
+
+        //eg1
+        console.log(num); //3 undefined
+        var num = 24; //1  =24 
+        console.log(num); //4 24
+        func(100, 200); //5
+
+        function func(num1, num2) { //2
+            var total = num1 + num2; //6
+            console.log(total); //300
+        }
+
+        //输出： undefined 24 300
+
+        //总结：
+        //1.程序运行的时候会先对var 变量和函数进行声明定义。
+        //2.当执行函数时候会开辟一个作用域重新预解析。
+        //3.当函数声明时若有等号则只解析左边 eg: var fun=function(){}
+
+        //eg2:
+        // console.log(num1); //2 undefined
+        // var num1 = 12; //1 先解析左边的变量
+        // console.log(num2); //3 num2 is not defined
+        // num2 = 12 //
+
+        //输出:undefined num2 is not defined
+        //总结 只有带有var 开头的变量才会预解析
+
+        //eg3
+        (function (num) {
+            console.log(num);
+        })()
+
+        //输出：undefined
+        //总结：定义和执行一起完成
+
+
+        //经典题目
+        fn(); //4 2
+
+        function fn() { //1
+            console.log(1);
+        }
+        fn(); //5 2
+        var fn = 10; //2
+        fn(); //10() fn is not function
+
+        function fn() { //3
+            console.log(2);
+        }
+
+        //输出  2 2 fn is not function
+
+
+        //js作用域
+
+        //作用域分为全局作用域，和局部作用域。局部作用域定义在函数代码块，必须使用var ，若不适用var则是全局作用域
+        //全局作用域能共享访问，局部作用域只能内部访问
+
+        //全局作用域
+        var outerVar = "outer";
+
+        function fn() {
+            console.log(outerVar);
+        }
+        fn(); //result:outer
+
+        //局部作用域
+        function fn() {
+            var innerVar = "inner";
+        }
+        fn();
+        console.log(innerVar); // ReferenceError: innerVar is not defined
+
+
+
+        var scope = "global";
+
+        function fn() {
+            console.log(scope); //result:undefined
+            var scope = "local";
+            console.log(scope); //result:local;
+        }
+        fn();
+
+
+        for (var i = 1; i < 10; i++) {
+            //coding
+        }
+        console.log(i); //10 
+
+        //作用域链
+        //根据在内部函数可以访问外部函数变量的这种机制，用链式查找决定哪些数据能被内部函数访问
+    </script>
+
+</body>
+
+</html>

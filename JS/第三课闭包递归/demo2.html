@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>js闭包和递归</title>
+</head>
+
+<body>
+    <script>
+        //闭包：内部函数的作用域链仍然保持着对父函数活动对象的引用
+        //闭包的作用:第一个就是可以读取自身函数外部的变量（沿着作用域链寻找）
+        // 第二个就是让这些外部变量始终保存在内存中
+        //匿名函数具有全局性
+
+        // function outer() {
+        //     var result = new Array();
+        //     for (var i = 0; i < 2; i++) { //注：i是outer()的局部变量
+        //         result[i] = function () {
+        //             return i;
+        //         }
+        //     }
+        //     console.log("全局 i " + i);
+        //     return result; //返回一个函数对象数组
+        //     //这个时候会初始化result.length个关于内部函数的作用域链
+        // }
+        // var fn = outer(); //
+        // console.log(fn[0]()); //0 ✖ 2
+        // console.log(fn[1]()); //1 ✖ 2
+
+
+        //怎么返回0和1呢
+
+        // function outer() {
+        //     var result = new Array();
+        //     for (var i = 0; i < 2; i++) { //注：i是outer()的局部变量 
+        //         var arg = function (i) {
+        //             return i;
+        //         }
+        //         result[i] = arg(i);
+        //     }
+        //     console.log("全局 i " + i);
+        //     return result; //返回一个函数对象数组
+        //     //这个时候会初始化result.length个关于内部函数的作用域链
+        // }
+        // var fn = outer(); //
+        // console.log(fn[0]); //0 
+        // console.log(fn[1]); //1 
+
+        //闭包解决
+
+        function outer() {
+            var result = new Array();
+            for (var i = 0; i < 2; i++) { //注：i是outer()的局部变量 
+                var arg = function (i) {
+                    return function () {
+                        return i;
+                    };
+                }
+                result[i] = arg(i);
+            }
+            console.log("全局 i " + i);
+            return result; //返回一个函数对象数组
+            //这个时候会初始化result.length个关于内部函数的作用域链
+        }
+        var fn = outer(); //
+        console.log(fn[0]()); //0 
+        console.log(fn[1]()); //1 
+
+
+
+        function outer() {
+            var result = new Array();
+            for (var i = 0; i < 2; i++) { //注：i是outer()的局部变量 
+                result[i] = function (i) {
+                    return function () {
+                        return i;
+                    };
+                }(i);
+            }
+            console.log("全局 i " + i);
+            return result; //返回一个函数对象数组
+            //这个时候会初始化result.length个关于内部函数的作用域链
+        }
+        var fn = outer(); //
+        console.log(fn[0]()); //0 
+        console.log(fn[1]()); //1 
+
+
+        //递归 两种 1.arguments.callee 是一个指向正在执行的函数的指针，因此可以用它来实现对函数的递归调用 2.调用本身函数
+        function factorial(num) {
+            if (num <= 1) {
+                return 1;
+            } else {
+                return num * factorial(num - 1);
+            }
+        }
+        console.log(factorial(10))
+
+
+        function factorial(num) {
+            if (num <= 1) {
+                return 1;
+            } else {
+                return num * arguments.callee((num - 1))
+            }
+        }
+        console.log(factorial(10))
+    </script>
+</body>
+
+</html>
