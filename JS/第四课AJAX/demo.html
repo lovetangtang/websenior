@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>第四课AJAX</title>
+</head>
+
+<body>
+    <input type="text" id="params">
+    <button onclick="sendRequest()">发送请求</button>
+    <span>响应结果</span>
+    <textarea name="" id="content" cols="30" rows="10"></textarea>
+    <script>
+        //AJAX=Asynchronous Javascript and XML(异步的Javascript和XML)主要是与服务器进行数据交互并更新网页内容，并且不重新加载整个页面
+
+        //主要的技术： CSS和XHTML  dom  XMLHttpRequest和服务器进行通信  javascript
+
+        //AJAX原理：在用户和服务器之间增加中间层 AJAX引擎，使用户操作与服务器响应异步化。主要使用XMLHttpRequest  IE使用ActiveXOject
+        //属性：onreadystatechange 响应函数  readyState响应状态值  status响应状态码 responseText 响应数据 
+        function sendRequest() {
+            var params = document.getElementById("params").value;
+            // ajax({
+            //     url: "http://localhost:53586/api/AjaxApi?name=" + params,
+            //     param: "",
+            //     type: "GET",
+            //     success: function (data) {
+            //         document.getElementById("content").value = data;
+            //     }
+            // })
+
+            ajax({
+                url: "http://localhost:53586/api/AjaxApi/Post",
+                data: {
+                    name: params
+                },
+                type: "POST",
+                success: function (data) {
+                    document.getElementById("content").value = data;
+                }
+            })
+        }
+
+        function ajax(options) {
+            var params = {
+                url: "",
+                data: "",
+                type: "",
+                success: null
+            }
+            for (var k in options) {
+                params[k] = options[k];
+            }
+            // for (var k in options['data']) {
+            //     params.data = k + "=" + options['data'][k]
+            // }
+            var xmlhttp = new XMLHttpRequest(); //实例一个对象
+            xmlhttp.open(params.type, params.url, true);
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(JSON.stringify(params.data));
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    params.success(xmlhttp.responseText)
+                }
+            }
+        }
+
+
+        //跨域：因为浏览器的同源测虐 
+        //解决办法：1.CORS请求原理：后台配置安全访问的限制  2.JSONP方式：利用javscript的<script>标签拥有跨域的能力3.代理模式：把后台作为代理请求进行跨域，比如webhttprequest
+        //4.websocket通信。。等等
+    </script>
+</body>
+
+</html>
