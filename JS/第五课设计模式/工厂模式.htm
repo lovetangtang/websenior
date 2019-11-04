@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //javascript十大常用设计模式
+
+        //工厂模式
+        //简单工厂模式：解决多个像是问题，做同样的事情产生同样的效果
+        function CreatePerson(name, age, sex) {
+            var obj = new Object();
+            obj.name = name;
+            obj.age = age;
+            obj.sex = sex;
+            obj.sayName = function () {
+                return this.name;
+            }
+            return obj
+        }
+        var p1 = new CreatePerson("小明", 12, '男');
+        var p2 = new CreatePerson("小红", 12, '男');
+
+        //复杂工厂模式：将成员对象的实例化推迟到子类中，子类可以重写父类即可欧方法便于创建的时候可以指定自己的对象类型。父类是个抽象。子类去实现具体的业务逻辑
+        //例如：开一个手机店，每个店都有不同的手机型号出售
+        //手机店
+        var PhoneShop = function (name) {
+            this.name = name;
+            this.methon = function () {
+                return this.name;
+            }
+        }
+        PhoneShop.prototype = {
+            sellPhone: function (mode) {
+                var phone = this.careatePhone(mode);
+                phone.A();
+                phone.B();
+                return phone;
+            },
+            careatePhone: function (mode) {
+                throw new Error("父类抽象，不实现")
+            }
+        }
+
+        var PhoneChild = function (name) {
+            this.name = name;
+            PhoneShop.call(this.name);
+        }
+        PhoneChild.prototype = new PhoneShop();
+        PhoneChild.prototype.careatePhone = function () {
+            var _this = this;
+            var A = function () {
+                console.log('先购买' + _this.name);
+            }
+            var B = function () {
+                console.log('在售货' + _this.name);
+            }
+            return {
+                A: A,
+                B: B
+            }
+        }
+
+        var iPhone = new PhoneChild("苹果");
+        var xiaoMi = new PhoneChild("小米");
+        var vivo = new PhoneChild("VIVO");
+        iPhone.sellPhone()
+        xiaoMi.sellPhone()
+        vivo.sellPhone()
+    </script>
+</body>
+
+</html>
