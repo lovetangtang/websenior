@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //观察者模式：观察者和目标，观察的目标提供一些供观察者维护的方法。观察者根据维护的方法更新接口
+        //例如：天气为目标A，检测天气的观察者B。B就把自己注册到A里面。当这个A触发天气变化的时候，B就做出响应
+        //eg
+        //观察者列表
+        function ObserverList() {
+            this.observerList = [];
+        }
+        //添加对象
+        ObserverList.prototype.add = function (obj) {
+            return this.observerList.push(obj);
+        }
+        //获取对象
+        ObserverList.prototype.get = function (index) {
+            if (index > -1 && this.observerList.length > 0)
+                return this.observerList[index];
+        }
+        //移除对象
+        ObserverList.prototype.removeAt = function (index) {
+            this.observerList.splice(index, 1);
+        }
+
+        //目标
+        function Subject() {
+            //注册观察者
+            this.observers = new ObserverList();
+        }
+
+        Subject.prototype.addObserver = function (observer) {
+            this.observers.add(observer)
+        }
+        Subject.prototype.removeObserver = function (observer) {
+            this.observers.removeAt(this.observers.indexOf(observer, 0));
+        }
+
+        Subject.prototype.notify = function (context) {
+            var observerCount = this.observers.observerList.length;
+            for (let index = 0; index < observerCount; index++) {
+                this.observers.get(index).update(context);
+            }
+        }
+
+        function Observer(name) {
+            this.name = name;
+            this.update = function (context) {
+                console.log("我是" + this.name + "观察结果为" + context);
+            }
+        }
+        var xiaohogn = new Observer("小红");
+        var xiaowang = new Observer("小王");
+        var mySubject = new Subject();
+        mySubject.addObserver(xiaohogn);
+        mySubject.addObserver(xiaowang);
+
+        mySubject.notify("现在突然小雨了，各部位注意");
+    </script>
+</body>
+
+</html>

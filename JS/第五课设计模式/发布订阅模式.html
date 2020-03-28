@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //发布订阅模式
+        //定义:订阅者吧自己想订阅的事件注册到调度中心，当该事件触发时候，发布者发布该事件到调度中心。
+        //例如：比如有个界面显示的是实时的天气预报，它就订阅天气事件。当这个天气变化时，就作为一个发布者发布到调度中心
+        //调度中心就调用订阅者的处理程序
+
+        //跟观察者模式区别：观察者是有具体目标调用的。而发布者是有调度中心统一调用。
+        //所以观察者与目标是存在依赖的，而发布订阅则不会
+
+        //eg
+        var pubsub = {};
+
+        (function (myObject) {
+            var topics = {};
+            var subUid = -1;
+
+            //发布指定订阅
+            myObject.publish = function (topic, args) {
+                if (!topics[topic]) {
+                    return false;
+                }
+                var suscribers = topics[topic];
+                var len = suscribers ? suscribers.length : 0;
+                while (len--) {
+                    suscribers[len].func(topic, args);
+                }
+                return this;
+            }
+            //向订阅中心添加订阅
+            myObject.subscribe = function (topic, func) {
+                if (!topics[topic]) {
+                    topics[topic] = [];
+                }
+                var token = (++subUid);
+                topics[topic].push({
+                    token: token,
+                    func: func
+                })
+                return token;
+            }
+
+
+        })
+    </script>
+</body>
+
+</html>
