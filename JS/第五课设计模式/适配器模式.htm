@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //适配器模式
+
+        //Adapter是将一个对象的接口转换为宁一个接口。让原本由于接口不兼容的内能够一起工作
+
+        //ge:比如一个鸭子：它只会嘎嘎嘎；一只火鸡：只会咯咯咯 
+        //要求让这只火鸡能够拥有鸭子的行为
+
+        //鸭子的抽象
+        var Duck = function () {}
+        Duck.prototype.quack = function () {
+            throw new Error("该方法必须被重写");
+        }
+        //火鸡的抽象类
+        var Turkey = function () {}
+        Turkey.prototype.gege = function () {
+            throw new Error("该方法必须被重写");
+        }
+
+        //定义一只鸭子
+        var TangYa = function () {
+            Duck.apply(this);
+        }
+        TangYa.prototype = new Duck();
+        TangYa.prototype.quack = function () {
+            console.log("嘎嘎嘎嘎");
+        }
+
+
+        //定义一只火鸡
+        var HuoJi = function () {
+            Turkey.apply(this);
+        }
+        HuoJi.prototype = new Turkey();
+        HuoJi.prototype.gege = function () {
+            console.log("咯咯咯咯咯咯");
+        }
+
+        //定义一个适配器让火鸡拥有鸭子的嘎嘎嘎
+
+        var TurkeyAdapter = function (oTurKey, oDuck) {
+            Duck.apply(this);
+            this.oTurKey = oTurKey;
+            this.oDuck = oDuck;
+        }
+        TurkeyAdapter.prototype = new Duck();
+        TurkeyAdapter.prototype.quack = function () {
+            this.oDuck.quack();
+            this.oTurKey.gege();
+        }
+
+        //调用
+
+        var duck1 = new TangYa();
+        var huoji1 = new HuoJi();
+        var turkeyAdapter = new TurkeyAdapter(huoji1, duck1);
+
+        turkeyAdapter.quack(); //同时调用鸭子 火鸡
+        // huoji1.gege(); //调用火鸡
+    </script>
+</body>
+
+</html>
